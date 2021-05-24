@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function FloatFormat(Float,Num){
+      let F;
+      let Fdec;
+      let Fint;
+      let Idx;
+      let L = 0;
+      let N;
+      let Chr =["0","1","2","3","4","5","6","7","8","9"];
+      let Out = [];
+      let Stack = [];
+      let T;
+
+      //符号の処理
+      if(Float>=0){
+        F = Float;
+      }else{
+        F = -Float;
+        Out[0] = "-";
+        L = 1;
+      }
+
+      //整数部の処理
+      Stack.push("#");
+      Fint = parseInt(F);
+      while(Fint > 0){
+        Idx = Fint - parseInt(Fint/10)*10;
+        Stack.push(Chr[Idx]);
+        Fint = parseInt(Fint/10);
+      }
+
+      //スタックから取り出す
+      T = Stack.pop();
+      while(T != "#"){
+        Out[L] = T;
+        L = L + 1;
+        T = Stack.pop();
+      }
+
+      //小数点の処理
+      if(L == 0 && Out[0] == "-"){
+        Out[L] = "0";
+        L = L + 1;
+      }
+      Out[L] = ".";
+      L = L + 1;
+
+      //小数部の処理
+      Fdec = F - parseInt(F);
+      Fdec = financial(Fdec,Num);
+      for(N = 1; N <= Num; N++){
+        fNum = Num;
+        Fdec = Fdec * 10;
+        Idx = parseInt(Fdec);
+        Out[L] = Chr[Idx];
+        L = L + 1;
+        fNum--;
+        Fdec = Fdec - parseInt(Fdec);
+        Fdec = financial(Fdec,fNum);
+      }
+      return Out;
+    }
+    function financial(x,Num) {
+      return Number.parseFloat(x).toFixed(Num);
+    }
+    // console.log(FloatFormat(-56.487,3));
+  </script>
+</body>
+</html>
